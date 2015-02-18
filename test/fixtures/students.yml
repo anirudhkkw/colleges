@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  sex: MyString
+  age: 1
+  dob: 2015-02-16
+  current_school: MyString
+  current_level: MyString
+  country: MyString
+  sat_score: 1
+  mentor_id: 
+
+two:
+  name: MyString
+  sex: MyString
+  age: 1
+  dob: 2015-02-16
+  current_school: MyString
+  current_level: MyString
+  country: MyString
+  sat_score: 1
+  mentor_id: 

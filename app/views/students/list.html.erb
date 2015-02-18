@@ -1,0 +1,200 @@
+
+<h1>Students#list</h1>
+<button type="button" class="btn btn-primary" id="addStudent"  data-toggle="modal" data-target="#myModal">Add Student</button>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Add Student</h4>
+			</div>
+			
+			<div class="modal-body">
+				<%= form_for @newStudent, url: {action: "new"}, html: {class: "form-horizontal", id:"formNewStudent"} do |f| %>
+				<div class="form-group">
+						<label for="studentName" class="col-sm-2 control-label">Name</label>
+						<div class="col-sm-10">
+							<%= f.text_field :name , class: "form-control", id:"studentName",placeholder:"Aapka naam" %>
+						</div>
+					</div>
+
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Sex</label>
+						<div class="col-sm-10">							
+							<%= radio_button(:student,:sex, "male") %>
+							<%= label_tag(:sex_male, "Male",class: "radio-inline") %>
+							<%= radio_button(:student, :sex, "female") %>
+							<%= label_tag(:sex_female, "Female",class: "radio-inline") %>
+						</div>						
+					</div>
+				  	<div class="form-group">
+						<label for="studentAge" class="col-sm-2 control-label">Age</label>
+						<div class="col-sm-2">							
+							<%= number_field(:student, :age, :class => "form-control", :id => "studentAge") %>
+						</div>
+
+					</div>
+				  	<div class="form-group">
+						<label for="studentDOB" class="col-sm-2 control-label">DOB</label>
+						<div class="col-sm-5">							
+							<%= date_field(:student, :dob, :class=> "form-control")  %>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="studentCurrentSchool" class="col-sm-2 control-label">Current School</label>
+						<div class="col-sm-10">							
+							<%= f.text_field :current_school , class: "form-control", id:"studentCurrentSchool",placeholder:"Current School" %>
+						</div>
+					</div> 
+
+					<div class="form-group">
+						<label for="studentCurrentLevel" class="col-sm-2 control-label">Current Level</label>
+						<div class="col-sm-10">
+							
+							<%= f.text_field :current_level , class: "form-control", id:"studentCurrentLevel",placeholder:"what's your level bro" %>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="studentCountry" class="col-sm-2 control-label">Country</label>
+						<div class="col-sm-10">
+							
+							<%= f.text_field :country , class: "form-control", id:"studentCountry",placeholder:"Kis desh se ho aap" %>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="studentScore" class="col-sm-2 control-label">SAT Score</label>
+						<div class="col-sm-2">							
+							<%= number_field(:student, :sat_score , :class => "form-control", :id => "studentScore") %>
+						</div>
+					</div>
+
+					<div class="dropdown form-group">
+						<label for="" class="col-sm-2 control-label">Mentor</label>
+						<div class="col-sm-8">													
+							<%= collection_select(:student, :mentor_id, @mentors.all, :id, :name) %>
+						</div>
+
+					</div>
+				  
+				<% end %>
+				
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" id="btnAddStudent">Save changes</button>
+			</div>
+
+		</div>
+	</div>
+</div>
+<table id="studentList" class="display" width="100%" cellspacing="0">
+	<thead>
+		<tr>
+			<th  class="alignCenter">Name</th>
+			<th  class="alignCenter">
+				Sex
+			</th>
+			<th  class="alignCenter">Age</th>
+			<th  class="alignCenter">DOB</th>
+			<th  class="alignCenter">Current School</th>
+			<th  class="alignCenter">Current Level</th>
+			<th  class="alignCenter">Country</th>
+			<th  class="alignCenter">SAT Score</th>
+			<th  class="alignCenter">Edit</th>
+			<th  class="alignCenter">Delete</th>
+		</tr>
+		
+	</thead>
+	<tfoot>
+		<tr>
+			<th  class="alignCenter">Name</th>
+			<th  class="alignCenter">
+				Sex
+			</th>
+			<th  class="alignCenter">Age</th>
+			<th  class="alignCenter">DOB</th>
+			<th  class="alignCenter">Current School</th>
+			<th  class="alignCenter">Current Level</th>
+			<th  class="alignCenter">Country</th>
+			<th class="alignCenter">SAT Score</th>
+			<th  class="alignCenter">Edit</th>
+			<th  class="alignCenter">Delete</th>
+		</tr>
+	</tfoot>
+	<tbody>
+		<% (0..@students.length-1).each do |i| %>
+		<tr>
+			<td>
+				<%= @students[i].name %>  
+			</td>
+			<td class="alignCenter">
+				<%= @students[i].sex %>  
+			</td>
+			<td class="alignCenter">
+				<%= @students[i].age %>  
+			</td>
+			<td class="alignCenter">
+				<%= @students[i].dob %>  
+			</td>
+			<td class="alignCenter">
+				<%= @students[i].current_school %>  
+			</td>
+			<td class="alignCenter">
+				<%= @students[i].current_level %>  
+			</td>
+			<td class="alignCenter">
+				<%= @students[i].country %>  
+			</td>
+			<td class="alignCenter">
+				<%= @students[i].sat_score %>  
+			</td>
+			<td class="alignCenter">
+				<i class="fa fa-pencil-square-o"></i>
+			</td>
+			<td class="alignCenter">
+				
+				<%= form_tag("/students/delete", method: "post", class:"deleteStudentForm") do %>
+				<%= hidden_field_tag(:student_id, @students[i].id) %>
+  	<a href="#" id="deleteStudent"><i class="fa fa-times"></i></a>
+<% end %>
+			</td>
+		</tr>	 
+		<% end %>
+	</tbody>
+</table>
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	$("#studentList").DataTable();
+	// $('#studentDOB').datepicker({ 
+	// 	changeMonth: true,
+	// 	changeYear: true
+	// });
+	// $("#studentDOB").datepicker( "option", "dateFormat","yy-mm-dd");
+	$("#btnAddStudent").on('click', function(){
+		$('#formNewStudent').submit();
+		// $.ajax({
+		// 	type: "POST",
+		// 	url : 'new',
+		// 	data : $('#formNewStudent').serialize() 
+		// }).done(function(){
+		// 	$('#myModal').modal('hide');
+		// 	alert('Student added!');
+		// 	location.reload();
+		// }).fail(function(){
+		// 	alert('Student not added :(');
+		// });
+	});
+
+	$("#deleteStudent").on('click', function(){		
+		$(".deleteStudentForm").submit();
+	});
+
+
+});
+
+</script>
