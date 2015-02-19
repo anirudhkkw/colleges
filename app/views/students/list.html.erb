@@ -10,7 +10,8 @@
 			</div>
 			
 			<div class="modal-body">
-				<%= form_for @newStudent, url: {action: "new"}, html: {class: "form-horizontal", id:"formNewStudent"} do |f| %>
+				<%= form_for @newStudent, url: { action: "new"}, html: {class: "form-horizontal", id:"formNewStudent"} do |f| %>
+				<%= hidden_field(:student, :id) %>
 				<div class="form-group">
 						<label for="studentName" class="col-sm-2 control-label">Name</label>
 						<div class="col-sm-10">
@@ -38,7 +39,7 @@
 				  	<div class="form-group">
 						<label for="studentDOB" class="col-sm-2 control-label">DOB</label>
 						<div class="col-sm-5">							
-							<%= date_field(:student, :dob, :class=> "form-control")  %>
+							<%= date_field(:student, :dob, :class=> "form-control", :id => "studentDOB")  %>
 						</div>
 					</div>
 
@@ -153,13 +154,14 @@
 				<%= @students[i].sat_score %>  
 			</td>
 			<td class="alignCenter">
-				<i class="fa fa-pencil-square-o"></i>
+				<a href="#" class="editStudent" data-studentid="<%=@students[i].id%>">
+				<i class="fa fa-pencil-square-o"></i></a>
 			</td>
 			<td class="alignCenter">
 				
 				<%= form_tag("/students/delete", method: "post", class:"deleteStudentForm") do %>
 				<%= hidden_field_tag(:student_id, @students[i].id) %>
-  	<a href="#" id="deleteStudent"><i class="fa fa-times"></i></a>
+  	<a href="#" class="deleteStudent"><i class="fa fa-times"></i></a>
 <% end %>
 			</td>
 		</tr>	 
@@ -170,31 +172,38 @@
 $(document).ready(function(){
 	
 	$("#studentList").DataTable();
-	// $('#studentDOB').datepicker({ 
-	// 	changeMonth: true,
-	// 	changeYear: true
-	// });
-	// $("#studentDOB").datepicker( "option", "dateFormat","yy-mm-dd");
+	$('#studentDOB').datepicker({ 
+		changeMonth: true,
+		changeYear: true
+	});
+	$("#studentDOB").datepicker( "option", "dateFormat","yy-mm-dd");
 	$("#btnAddStudent").on('click', function(){
-		$('#formNewStudent').submit();
-		// $.ajax({
-		// 	type: "POST",
-		// 	url : 'new',
-		// 	data : $('#formNewStudent').serialize() 
-		// }).done(function(){
-		// 	$('#myModal').modal('hide');
-		// 	alert('Student added!');
-		// 	location.reload();
-		// }).fail(function(){
-		// 	alert('Student not added :(');
-		// });
+		$('#formNewStudent').submit();		
 	});
 
-	$("#deleteStudent").on('click', function(){		
+	$(".deleteStudent").on('click', function(){		
 		$(".deleteStudentForm").submit();
 	});
 
-
+	$(".editStudent").on('click',function(){
+		$.ajax({
+			type: "GET",
+			url : '/students/edit',
+			data : {student_id : $(this).data("studentid") }
+		}).done(function(data){
+			$("#studentName").val(data.name);
+			$("#studentAge").val(data.age);
+			$("#studentDOB").val(data.dob);
+			$("#studentCurrentSchool").val(data.current_school);
+			$("#studentCurrentLevel").val(data.current_level);
+			$("#studentCountry").val(data.country);
+			$("#studentScore").val(data.sat_score);
+			$("#student_id").val(data.id);
+			$('#myModal').modal('show');					
+		}).fail(function(){
+			alert('Student cant be edited :(');
+		});
+	})
 });
 
 </script>
