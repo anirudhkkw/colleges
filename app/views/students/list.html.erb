@@ -80,7 +80,19 @@
 						</div>
 
 					</div>
-				  
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Colleges</label>
+						<div class="col-sm-5">
+
+							
+							<select id="lstColleges">								
+								<% (0..@colleges.length-1).each do |i| %>
+									<option value="<%= @colleges[i].id %>"><%= @colleges[i].name %></option>
+								<% end %>
+							</select>
+						</div>
+					</div>
+				  	<%= hidden_field_tag(:college_ids, "0") %>
 				<% end %>
 				
 			</div>
@@ -170,7 +182,7 @@
 </table>
 <script type="text/javascript">
 $(document).ready(function(){
-	
+	$("#lstColleges").multiselect();
 	$("#studentList").DataTable();
 	$('#studentDOB').datepicker({ 
 		changeMonth: true,
@@ -178,6 +190,9 @@ $(document).ready(function(){
 	});
 	$("#studentDOB").datepicker( "option", "dateFormat","yy-mm-dd");
 	$("#btnAddStudent").on('click', function(){
+		$("#college_ids").val($("#lstColleges").multiselect("getChecked").map(function(){
+   return this.value;    
+}).get());
 		$('#formNewStudent').submit();		
 	});
 
@@ -191,13 +206,21 @@ $(document).ready(function(){
 			url : '/students/edit',
 			data : {student_id : $(this).data("studentid") }
 		}).done(function(data){
+			
 			$("#studentName").val(data.name);
+			if(data.sex == "male"){
+				$( "#student_sex_male" ).prop( "checked", true );
+			}
+			else{
+				$( "#student_sex_female" ).prop( "checked", true );
+			}
 			$("#studentAge").val(data.age);
 			$("#studentDOB").val(data.dob);
 			$("#studentCurrentSchool").val(data.current_school);
 			$("#studentCurrentLevel").val(data.current_level);
 			$("#studentCountry").val(data.country);
-			$("#studentScore").val(data.sat_score);
+			$("#studentScore").val(data.sat_score);			
+			$("#student_mentor_id option[value='" + data.mentor_id + "']").attr("selected","selected");
 			$("#student_id").val(data.id);
 			$('#myModal').modal('show');					
 		}).fail(function(){
