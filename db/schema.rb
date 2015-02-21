@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150216152619) do
+ActiveRecord::Schema.define(version: 20150216152827) do
 
   create_table "colleges", force: :cascade do |t|
     t.string   "name",          limit: 255
@@ -34,6 +34,16 @@ ActiveRecord::Schema.define(version: 20150216152619) do
     t.datetime "updated_at",               null: false
   end
 
+  create_table "student_colleges", force: :cascade do |t|
+    t.integer  "student_id", limit: 4
+    t.integer  "college_id", limit: 4
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "student_colleges", ["college_id"], name: "index_student_colleges_on_college_id", using: :btree
+  add_index "student_colleges", ["student_id"], name: "index_student_colleges_on_student_id", using: :btree
+
   create_table "students", force: :cascade do |t|
     t.string   "name",           limit: 255
     t.string   "sex",            limit: 255
@@ -44,12 +54,13 @@ ActiveRecord::Schema.define(version: 20150216152619) do
     t.string   "country",        limit: 255
     t.integer  "sat_score",      limit: 4
     t.integer  "mentor_id",      limit: 4
-    t.integer  "college_id",     limit: 4
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
   end
 
   add_index "students", ["mentor_id"], name: "index_students_on_mentor_id", using: :btree
 
+  add_foreign_key "student_colleges", "colleges"
+  add_foreign_key "student_colleges", "students"
   add_foreign_key "students", "mentors"
 end
